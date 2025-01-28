@@ -9,6 +9,8 @@ CORS(app)  # Enable CORS
 with open("q-vercel-python.json", "r") as file:
     students = json.load(file)
 
+student_marks = {student['name']: student['marks'] for student in students}
+
 
 @app.route("/api", methods=["GET"])
 def get_marks():
@@ -16,7 +18,7 @@ def get_marks():
     names = request.args.getlist("name")
     
     # Find marks for the provided names
-    marks = [student["marks"] for student in students if student["name"] in names]
+    marks = [student_marks.get(name, None) for name in names]
     
     return jsonify({"marks": marks})
 
